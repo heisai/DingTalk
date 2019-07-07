@@ -19,11 +19,11 @@ class Custom_Info:
     def __init__(self,name,unionid,userid,department,mobile,email = ""):
     
         self.name = name				#客户名称 
-        self.unionid = unionid			#客户唯一表识
-        self.userid = userid 
-        self.department = department	#客户所在部门
+        self.unionid = unionid				#客户唯一表识
+        self.userid = userid 				
+        self.department = department			#客户所在部门
         self.email = email 				#客户绑定有邮箱
-        self.mobile = mobile			#客户绑定手机号
+        self.mobile = mobile				#客户绑定手机号
     
     
 class DingTalk:
@@ -53,8 +53,8 @@ class DingTalk:
         data = requests.get(self.Url) 
         return json.loads(data.text)
      '''
-	 	获取Token
-	 '''
+	 获取Token
+     '''
     def __get_Token(self):
         
         url = "https://oapi.dingtalk.com/gettoken?"
@@ -70,8 +70,8 @@ class DingTalk:
             url += "&{0}={1}".format(key,value)
         self.Url = url
     '''
-		获取当前部门下 客户的具体信息(1:根部门)
-	'''
+	获取当前部门下 客户的具体信息(1:根部门)
+    '''
     def __depart_custome_info(self,m_department_id ="1", m_offset = "0",m_size= "10"):
         
         url = "https://oapi.dingtalk.com/user/listbypage?"
@@ -103,7 +103,7 @@ class DingTalk:
 		发送消息有三种
 		1:text        纯文本格式
 		2:File        上传文件
-		3:Html 		  在网页显示
+		3:Html 	      在网页显示
 	'''
     def  MimeType(self,url = "https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2?"):
         msg_dict = None
