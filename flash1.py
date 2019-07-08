@@ -66,14 +66,6 @@ def Message():
 
     try:
         data = request.get_data()
-        #print(data.repl)
-        print(type(data))
-          
-        print(str(data, encoding = "utf-8").replace("\r\n",""))
-        #return data
-        print(json.loads(data))
-        #return data
-        
         recived = request_data(json.loads(data))
         print(recived)
         DT = DingTalk(*recived["Mobile"], **recived)
