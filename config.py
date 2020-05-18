@@ -6,10 +6,10 @@ IP = "0.0.0.0"
 
 port ="8081"
 
-appkey = "dingxkmipwu1szd75hpt"
+appkey = "xxxxxxxxx"
 
-appsecret = "Kco45Ah_EAJor6qm_K0g-9YbUSuBlqb1_vOBXW7-H9zRLL87zCGFoBs0X-mHB9_0"
+appsecret = "xxxxxxxxxxxxxxxxxxxxxxxxxx"
 
-AgentId = "274556865"
+AgentId = "xxxx"
 
 log_path = os.getcwd()
