@@ -33,6 +33,9 @@ class DingTalk:
         self.Type = argv["Type"]
         self.Content = argv["Content"]
         self.UUID = argv["Uuid"]
+        self.Markdown = argv["Title"]
+        self.File_Url = argv["File_url"]
+        
         self.appkey = appkey
         self.appsecret = appsecret
         self.AgentId = AgentId
@@ -41,8 +44,9 @@ class DingTalk:
         self.Info_List = {}
         
         self.__get_Token()
+        self.__get_sub_deptd()
+        
        
-        self.__depart_custome_info("1","0","10")
         
         
         
@@ -53,9 +57,7 @@ class DingTalk:
     def __GET(self):
         data = requests.get(self.Url) 
         return json.loads(data.text)
-    '''
-	获取Token
-    '''
+       
     def __get_Token(self):
         
         url = "https://oapi.dingtalk.com/gettoken?"
@@ -70,12 +72,7 @@ class DingTalk:
         for key,value in kwargs.items():
             url += "&{0}={1}".format(key,value)
         self.Url = url
-    '''
-	获取当前部门下 客户的具体信息
-    m_department_id:    部门ID 1:代表根部门
-    m_offset:           读取偏移量
-    m_size:             获取客户信息数量
-    '''
+        
     def __depart_custome_info(self,m_department_id ="1", m_offset = "0",m_size= "10"):
         
         url = "https://oapi.dingtalk.com/user/listbypage?"
@@ -93,6 +90,16 @@ class DingTalk:
             raise Exception(recive)
     
         
+    def __get_sub_deptd(self):
+        url = "https://oapi.dingtalk.com/department/list_ids?"
+        self.__URL(url,True,id = "1")
+        recive = self.__GET()
+        if recive["errcode"] == 0:
+            print(recive)
+            print(recive["sub_dept_id_list"])
+            for id in recive["sub_dept_id_list"]:
+                self.__depart_custome_info(m_department_id = id , m_offset = "0",m_size = 100)
+    
             
     def send_message(self):
     
@@ -119,12 +126,16 @@ class DingTalk:
             msg_dict = self.File(str(recive["media_id"]))
         elif self.Type == "Html":
             msg_dict = self.Html()
+        elif self.Type == "Html&Accessory":
+            msg_dict = self.Html_Accessory()
+        elif self.Type == "Text&Accessory":
+            msg_dict = self.Text_Accessory() 
         return  msg_dict
             
 
     def Text(self):
-        time_str = "["+time.strftime("%H:%M:%S",time.localtime())+"]"
-        content = "消息通知:\n\t\t%s\n%s"%(self.Content, time_str)
+        time_str = "["+time.strftime("%m%d-%H:%M:%S",time.localtime())+"]"
+        content = "消息通知:\n%s\n\t\t%s\n%s"%(self.Markdown,self.Content,time_str)    
         msg_dict = {}
         msg_dict["msg"] ={ "msgtype":"text", "text":{"content": content}}
 
@@ -145,21 +156,45 @@ class DingTalk:
         return msg_dict
         
     def Html(self):
-        recive = msg_dict = {}
+        msg_dict = {}
         msg_dict["msg"]={
                             "msgtype": "action_card",
                             "action_card": {
-                                "title": "消息通知",
-                                "markdown": '消息通知:',
-                                "btn_orientation": "1",
-                                "btn_json_list": 
-                                [
-                                    {
-                                        "title": "查看",
-                                        "action_url": Action_Url + self.UUID
-                                    }
-                                ]
-                                    }
+                            "title": "卓盟科技消息通知",
+                            "markdown": "消息通知:\n\n{0}\n\n(点击链接可查看消息内容)\n{1}".format(self.Markdown,Action_Url+self.UUID),
+                            "single_title": "查看详情",
+                            "single_url": Action_Url+self.UUID
+                            }
+                        }
+
+        return msg_dict
+    
+    def Html_Accessory(self):
+    
+        
+        msg_dict = {}
+        msg_dict["msg"]={
+                            "msgtype": "action_card",
+                            "action_card": {
+                            "title": "卓盟科技消息通知",
+                            "markdown": "消息通知:\n\n{0}\n\n(点击链接可查看消息内容)\n{1}".format(self.Markdown,Action_Url+self.UUID),
+                            "single_title": "查看详情",
+                            "single_url": Action_Url + self.UUID 
+                            }
+                        }
+        return msg_dict
+     
+    def Text_Accessory(self):
+        time_str = "["+time.strftime("%m%d-%H:%M:%S",time.localtime())+"]"
+        msg_dict = {}
+        msg_dict["msg"]={
+                            "msgtype": "action_card",
+                            "action_card": {
+                            "title": "卓盟科技消息通知",
+                            "markdown": "消息通知:\n\n{0}\n\n{1}".format(self.Content,time_str),
+                            "single_title": "附件下载",
+                            "single_url": self.File_Url
+                            }
                         }
 
         return msg_dict
@@ -167,12 +202,14 @@ class DingTalk:
      
     def upload_file(self):
 
+        filename =r"C:\Users\admin\Desktop\data\celey\1.xlsx"
+
         url = "https://oapi.dingtalk.com/media/upload?"
         self.__URL(url,True,type = "file")
         data ={}
         header = {}
-        #data['media']= ("aaaa.txt",open(filename,'rb').read())
-        data['media']= ("消息通知.txt",self.Content)
+        data['media']= ("aaaa.xlsx",open(filename,'rb').read())
+        #data['media']= ("消息通知.txt",self.Content)
         encode_data = encode_multipart_formdata(data)
         data = encode_data[0]
         
@@ -189,7 +226,7 @@ class DingTalk:
         
         
 if __name__ == '__main__':
-    DT = DingTalk("13474248914", Type = "Html", Content = "12345678987654321",Title = "通知消息" )
+    DT = DingTalk("13474248914", Type = "Html", Content = "12345678987654321",Title ="1234" )
     DT.send_message()
      
     

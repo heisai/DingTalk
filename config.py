@@ -1,15 +1,15 @@
+import os
 
-Action_Url = "http://10.0.0.220:8081/show/html/"  #查看按钮调转地址
+Action_Url = "http://120.92.140.30:8081/show/html/"
 
-IP = "10.0.0.220"            # flask 服务IP
+IP = "0.0.0.0"
 
-port ="8081"	             # flask 服务端口
+port ="8081"
 
-appkey = "xxxxxxxxx"         #钉钉平台创建微应用即可获取
+appkey = "dingxkmipwu1szd75hpt"
 
-appsecret = "xxxxxx"         #钉钉平台创建微应用即可获取
+appsecret = "Kco45Ah_EAJor6qm_K0g-9YbUSuBlqb1_vOBXW7-H9zRLL87zCGFoBs0X-mHB9_0"
 
+AgentId = "274556865"
 
-AgentId = "xxxxxxxx"         #钉钉平台创建微应用即可获取
-
-request_ip = "xxxxxx"        # 创建微应用的时候 需要,可以随意填写一个, 在请求api 的时候 错误信息会有正确的 request_ip
+log_path = os.getcwd()
