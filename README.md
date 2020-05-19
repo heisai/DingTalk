@@ -15,7 +15,7 @@ __python aap.py__
 __服务开启, 客户发送消息只需 调用http 请求即可__
 
 ### 请求如下:
- __10.0.0.127:port/'/send/Message__ 
+ __10.0.0.127:port/send/Message__ 
  #### 字段 json 格式:
  
  字段 | value |  类型| 详情  
